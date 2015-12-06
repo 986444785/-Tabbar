@@ -1,0 +1,112 @@
+//
+//  BBCShopBar.m
+//  购买Tabbar
+//
+//  Created by BBC on 15/11/16.
+//  Copyright (c) 2015年 陈伟滨. All rights reserved.
+//
+
+#import "BBCShopBar.h"
+#define Iphone_width  [UIScreen mainScreen].bounds.size.width
+@implementation BBCShopBar
+
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+
+        [self createShopBar];
+    }
+    return self;
+}
+ 
+-(void)createShopBar{
+
+    float barHeight = 50;
+    float collectionWidth = 60;
+    float acctionBtnWidth = (Iphone_width-60*2)/3;
+
+    UIView * view = [[UIView alloc]initWithFrame:CGRectMake(0, 0 , Iphone_width,barHeight )];
+    view.backgroundColor = [UIColor whiteColor];
+    [self addSubview:view];
+
+    //立即购买
+    //加入购物车
+      NSArray * titlearray1 = @[@"立即购买",@"加入购物车",@"一键分享"];
+    for (int i=0 ; i<titlearray1.count; i++) {
+        UIButton * buybutton = [UIButton buttonWithType:UIButtonTypeCustom];
+
+        buybutton.frame = CGRectMake(Iphone_width - acctionBtnWidth*(i+1), 0, acctionBtnWidth, barHeight);
+
+        [buybutton setTitle:titlearray1[i] forState:UIControlStateNormal];
+
+        buybutton.titleLabel.font = [UIFont systemFontOfSize:12];
+
+        if (Iphone_width>320) {
+            buybutton.titleLabel.font = [UIFont systemFontOfSize:14];
+        }
+
+        buybutton.tag = i;
+
+        if (i==0) {
+            buybutton.backgroundColor = [UIColor magentaColor];
+        }else if (i==1){
+            buybutton.backgroundColor = [UIColor colorWithRed:1.000 green:0.800 blue:0.400 alpha:1.000];
+        }else if (i==2){
+            [buybutton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        }
+
+        [buybutton addTarget:self action:@selector(ShopBarBuyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [view addSubview:buybutton];
+
+    }
+
+
+    //店家
+    //收藏
+    NSArray * titlearray2 = @[@"店家",@"收藏",@"myShopImg.png",@"collectionimg.png"];
+    for (int j=0 ; j<2; j++) {
+
+        UIImageView * logoimgview = [[UIImageView alloc]initWithFrame:CGRectMake(collectionWidth*j + (collectionWidth-20)/2, 5, 20, 20)];
+        logoimgview.image = [UIImage imageNamed:titlearray2[2+j]];
+        [view addSubview:logoimgview];
+
+
+        UILabel * titleLable = [[UILabel alloc]initWithFrame:CGRectMake(collectionWidth*j, barHeight- 20, collectionWidth, 15)];
+        titleLable.textAlignment = NSTextAlignmentCenter;
+        titleLable.text = titlearray2[j];
+        titleLable.font = [UIFont systemFontOfSize:12];
+        [view addSubview:titleLable];
+
+        UIButton * collectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+
+        collectButton.frame = CGRectMake(collectionWidth*j, 0, collectionWidth, barHeight);
+
+        collectButton.tag = j+titlearray1.count;
+
+        [collectButton addTarget:self action:@selector(ShopBarBuyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [view addSubview:collectButton];
+    }
+
+
+}
+ 
+
+-(void)ShopBarBuyBtnClick:(UIButton *)sender
+{
+    if ([self.delegate respondsToSelector:@selector(ShopBarButtonClick:)]) {
+        [self.delegate ShopBarButtonClick:sender];
+    }
+}
+
+
+
+
+
+
+
+
+
+@end
